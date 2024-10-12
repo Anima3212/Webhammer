@@ -1,0 +1,22 @@
+{
+  "name": "warhammerapp",
+  "version": "1.0.0",
+  "description": "Online warhammer app to play with friends",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anima3212/Webhammer.git"
+  },
+  "author": "James Overall",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Anima3212/Webhammer/issues"
+  },
+  "homepage": "https://github.com/Anima3212/Webhammer#readme",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
