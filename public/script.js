@@ -45,30 +45,60 @@ document.getElementById("submitButton").addEventListener("click", function() {
   
     movePlayerDown(degrees,distance);
   // Log stored values to console (for debugging)
-  console.log(storedValues);
+  console.log(degrees, distance);
 
   // Clear the input fields
   document.getElementById("form1").reset();
   document.getElementById("form2").reset();
 });
 
-function movePlayerDown(degrees,distance) {
-  player1.move(0, 0.3);  // Move down 0.3 units
-  player2.move(0, 0.3);  // Move down 0.3 units
+function movePlayerDown(degrees, distance) {
+  // Convert degrees to radians
+  const radians = degrees * (Math.PI / 180);
+
+  // Calculate x and y movement based on polar coordinates
+  const dx = distance * Math.cos(radians);
+  const dy = -distance * Math.sin(radians);
+
+  // Move the player by the calculated x and y amounts
+  player1.move(dx, dy);
+
+  // Debug: Log the calculated values for x and y
+  console.log(`Moving player1 by (x: ${dx}, y: ${dy})`);
+}
+
+function rollNumber(diceValue, diceDiv, time, delay) {
+  // Update the dice display
+  diceDiv.textContent = (time % 6) + 1;
+
+  // Check if we've reached the final diceValue and stop
+  if (time >= 25 + diceValue) {
+    diceDiv.textContent = diceValue; // Set the final result
+    return;
+  }
+
+  // Increase the time and delay to simulate slowing down
+  time++;
+  delay += 1.5*Math.log10(time); // Gradually increase the delay to slow down the dice roll
+
+  // Recursively call rollNumber with a delay
+  setTimeout(() => rollNumber(diceValue, diceDiv, time, delay), delay);
 }
 
 function rollDice() {
+  const time = 0;
+  const delay = 50; // Initial delay for fast rolling
+
   // Random number between 1 and 6
   const diceValue = Math.floor(Math.random() * 6) + 1;
 
-  // Get the diceResult div and update it
+  // Get the diceResult div
   const diceDiv = document.getElementById("diceResult");
   
-  // Display different dice faces using Unicode characters
-  const diceFaces = ["1", "2", "3", "4", "5", "6"];
-  
-  diceDiv.textContent = diceFaces[diceValue - 1];
+  // Start the rolling effect
+  rollNumber(diceValue, diceDiv, time, delay);
 }
+
 window.rollDice = rollDice;
 
 // Once the image has loaded, draw it on the canvas
