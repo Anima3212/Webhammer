@@ -5,16 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Warhammer Online</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+   
+    </style>
 </head>
 <body>
-    <div class="game-container">
-        <canvas id="gameBoard" width="800" height="600"></canvas>
-        <div class="controls">
-            <button id="moveBtn">Move</button>
-            <button id="attackBtn">Attack</button>
-            <p id="turnIndicator">Player 1's turn</p>
-        </div>
-    </div>
-    <script src="script.js"></script>
+    <canvas id="myCanvas" width="1000rem" height="500rem" style="border:1px solid grey;">
+        Sorry, your browser does not support canvas.
+    </canvas>
+
+    <h1>Roll the Dice!</h1>
+    <div id="diceResult" class="dice">🎲</div>
+    <button onclick="rollDice()">Roll</button>
+
+    <!-- Forms below the canvas -->
+    <form id="form1">
+        <label for="number1">Degrees:</label>
+        <input type="number" id="number1" required>
+    </form>
+
+    <form id="form2">
+        <label for="number2">Distance(0-1):</label>
+        <input type="number" id="number2" required>
+    </form>
+
+    <button id="submitButton">Submit</button>
+
+    <script src="script.js" type="module"></script>
 </body>
 </html>

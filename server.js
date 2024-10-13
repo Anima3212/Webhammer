@@ -1,9 +1,16 @@
 const express = require('express');
+const path = require('path');
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-app.use(express.static('public'));
+// Serve static files from the root or a folder like 'public'
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
+// For example, if your index.html is in the root directory:
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
-app.listen(port, () => console.log(`App running on http://localhost:${port}`));
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});

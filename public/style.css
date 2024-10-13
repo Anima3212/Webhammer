@@ -1,0 +1,29 @@
+
+     /* Add some margin for spacing */
+     body {
+        font-family: Arial, sans-serif; /* Optional: Change font */
+        text-align: center; /* Center align the text */
+        margin: 20px; /* Add some margin around the body */
+    }
+
+    canvas {
+        display: block; /* Center the canvas */
+        margin: 0 auto; /* Center the canvas horizontally */
+    }
+
+    form {
+        display: block; /* Ensure forms are displayed as block elements */
+        margin: 10px 0; /* Space between forms */
+    }
+
+    .dice {
+        font-size: 2rem; /* Bigger font for the dice result */
+        margin: 10px 0; /* Space above and below the dice */
+    }
+
+    /* Optional: Style the button */
+    button {
+        margin: 10px; /* Space around buttons */
+        padding: 10px 20px; /* Button padding */
+        font-size: 1rem; /* Font size */
+    }
