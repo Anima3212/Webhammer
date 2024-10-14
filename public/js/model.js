@@ -1,7 +1,7 @@
 // Exporting a class named 'model', which represents a game character or entity
 export class model {
     // Constructor to initialize the properties of the model (image, position, health, and name)
-    constructor(image, x, y, health, name) {
+    constructor(image, x, y, health, name, ) {
         this.image = image;   // The image associated with the model (likely for rendering purposes)
         this.x = x;           // X-coordinate (position on the board/grid)
         this.y = y;           // Y-coordinate (position on the board/grid)
