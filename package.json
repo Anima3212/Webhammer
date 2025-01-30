@@ -1,22 +1,18 @@
 {
-  "name": "warhammerapp",
+  "name": "webhammer",
   "version": "1.0.0",
-  "description": "Online warhammer app to play with friends",
-  "main": "script.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Anima3212/Webhammer.git"
-  },
-  "author": "James Overall",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Anima3212/Webhammer/issues"
-  },
-  "homepage": "https://github.com/Anima3212/Webhammer#readme",
+  "description": "",
   "dependencies": {
-    "express": "^4.21.1"
+    "express": "^4.21.2",
+    "nodemon": "^3.1.9",
+    "rpg-dice-roller": "^5.0.0",
+    "socket.io": "^4.8.1"
   }
 }

@@ -1,29 +1,304 @@
-
-     /* Add some margin for spacing */
-     body {
-        font-family: Arial, sans-serif; /* Optional: Change font */
-        text-align: center; /* Center align the text */
-        margin: 20px; /* Add some margin around the body */
+/* style.css */
+:root {
+    --dark-bg: #1a1a1a;
+    --accent-red: #cc0000;
+    --accent-gold: #ffd700;
+    --text-primary: #e0e0e0;
+    --grid-cell: #2d2d2d;
+  }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    background: linear-gradient(to bottom right, #0a0a0a, #1a1a1a);
+    color: var(--text-primary);
+    font-family: 'Orbitron', sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  /* Army Picker Styles */
+  .army-picker {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--accent-red);
+    box-shadow: 0 0 15px rgba(204, 0, 0, 0.3);
+  }
+  
+  .army-picker h2 {
+    color: var(--accent-red);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background: #333;
+    color: var(--text-primary);
+    border: 1px solid var(--accent-red);
+    border-radius: 5px;
+    font-family: inherit;
+  }
+  
+  /* Game Grid Styles */
+  .game-grid {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--accent-red);
+    box-shadow: 0 0 15px rgba(204, 0, 0, 0.3);
+  }
+  
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    gap: 2px;
+    margin-top: 20px;
+  }
+  
+  .grid-cell {
+    width: 40px;
+    height: 40px;
+    background: var(--grid-cell);
+    border: 1px solid #444;
+    position: relative;
+    transition: all 0.2s ease;
+    cursor: crosshair;
+  }
+  
+  .grid-cell:hover {
+    background: #3d3d3d;
+    transform: scale(1.1);
+    z-index: 1;
+  }
+  
+  .grid-cell.unit {
+    background: var(--accent-red);
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 10px rgba(204, 0, 0, 0.5);
+  }
+  
+  .grid-cell.unit::after {
+    content: "⚔️";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2em;
+  }
+  
+  /* Dice Roller Styles */
+  .dice-roller {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--accent-red);
+    box-shadow: 0 0 15px rgba(204, 0, 0, 0.3);
+  }
+  
+  .dice-roller button {
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .dice-roller button:hover {
+    background: #ff0000;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  }
+  
+  #dice-results {
+    margin-top: 15px;
+    font-size: 1.2em;
+    color: var(--accent-gold);
+    min-height: 40px;
+  }
+  
+  /* Unit List Styles */
+  #unit-list {
+    margin: 15px 0;
+    padding: 10px;
+    background: #1a1a1a;
+    border-radius: 5px;
+    border: 1px solid #444;
+  }
+  
+  .unit-item {
+    padding: 8px;
+    margin: 5px 0;
+    background: #2a2a2a;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .unit-item:hover {
+    background: #3a3a3a;
+    transform: translateX(5px);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .container {
+      grid-template-columns: 1fr;
+    }
+    
+    .army-picker {
+      margin-bottom: 30px;
+    }
+    
+    .dice-roller {
+      position: static;
+      margin-top: 30px;
     }
 
-    canvas {
-        display: block; /* Center the canvas */
-        margin: 0 auto; /* Center the canvas horizontally */
+}
+    /* Add these to style.css */
+/* Faction Selection */
+#faction-selection {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .confirm-button {
+    background: var(--accent-red);
+    margin-top: 1rem;
+    padding: 12px 24px;
+  }
+  
+  /* Army Building */
+  .army-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  
+  .unit-list, .selected-army {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #444;
+  }
+  
+  .unit-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    background: #2a2a2a;
+    border-radius: 4px;
+  }
+  
+  .unit-controls button {
+    background: #444;
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .unit-controls button:hover {
+    background: var(--accent-red);
+  }
+  
+  .selected-unit {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem;
+    margin: 0.4rem 0;
+    background: #1a1a1a;
+    border-left: 3px solid var(--accent-red);
+  }
+  
+  .start-button {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 12px 0;
+    background: var(--accent-gold);
+    color: #000;
+    font-weight: bold;
+  }
+  
+  #total-points {
+    color: var(--accent-gold);
+  }
+  /* Army Status Panel */
+.army-status {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    width: 300px;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--accent-red);
+    box-shadow: 0 0 15px rgba(204, 0, 0, 0.3);
+    z-index: 1000;
+  }
+  
+  .army-status h3 {
+    margin-bottom: 1rem;
+  }
+  
+  #selected-units {
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+  }
+  
+  /* Adjust main container */
+  .container {
+    margin-left: 340px; /* Make space for army status */
+  }
+  
+  /* Remove selected army from army-building */
+  .army-columns {
+    grid-template-columns: 1fr; /* Single column now */
+  }
+  
+  /* Mobile adjustments */
+  @media (max-width: 1200px) {
+    .army-status {
+      position: static;
+      width: 100%;
+      margin-bottom: 2rem;
     }
-
-    form {
-        display: block; /* Ensure forms are displayed as block elements */
-        margin: 10px 0; /* Space between forms */
+    
+    .container {
+      margin-left: 0;
     }
-
-    .dice {
-        font-size: 2rem; /* Bigger font for the dice result */
-        margin: 10px 0; /* Space above and below the dice */
-    }
-
-    /* Optional: Style the button */
-    button {
-        margin: 10px; /* Space around buttons */
-        padding: 10px 20px; /* Button padding */
-        font-size: 1rem; /* Font size */
-    }
+  }
+  

@@ -1,16 +1,41 @@
 const express = require('express');
-const path = require('path');
+const { Server } = require('socket.io');
+const http = require('http');
+const { DiceRoll } = require('rpg-dice-roller');
+
 const app = express();
-const PORT = 3000;
+const server = http.createServer(app);
+const io = new Server(server);
 
-// Serve static files from the root or a folder like 'public'
-app.use(express.static(path.join(__dirname, 'public')));
+// Game state
+let gameState = {
+  grid: Array(10).fill().map(() => Array(10).fill('empty')),
+  players: {}
+};
 
-// For example, if your index.html is in the root directory:
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+// Serve static files
+app.use(express.static('public'));
+
+// Socket.io logic
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
+
+  // Send initial game state
+  socket.emit('game-state', gameState);
+
+  // Handle dice rolls
+  socket.on('roll-dice', (notation) => {
+    const roll = new DiceRoll(notation);
+    io.emit('dice-result', { player: socket.id, result: roll });
+  });
+
+  // Handle grid updates
+  socket.on('place-unit', (x, y) => {
+    gameState.grid[y][x] = 'unit';
+    io.emit('game-state', gameState);
+  });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+server.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
 });
