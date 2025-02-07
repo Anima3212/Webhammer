@@ -3,6 +3,7 @@ const socket = io();
 let selectedFaction = null;
 let selectedUnits = [];
 const MAX_POINTS = 2000;
+let selectedUnit = null;
 
 // Faction unit data
 const UNITS = {
@@ -126,23 +127,66 @@ function updateSelectedArmy() {
 }
 
 function startGame() {
-  if (calculateTotalPoints() === 0) {
-    alert("Your army must contain at least one unit!");
-    return;
+    if (calculateTotalPoints() === 0) {
+      alert("Your army must contain at least one unit!");
+      return;
+    }
+    
+    document.querySelector('.army-picker').style.display = 'none';
+    document.getElementById('game-grid').style.display = 'block';
+    initializeGame();
+    renderArmyUnits();
   }
+  function renderArmyUnits() {
+    const container = document.getElementById('army-units');
+    container.innerHTML = '';
+    
+    selectedUnits.forEach(unit => {
+      const div = document.createElement('div');
+      div.className = 'army-unit';
+      div.innerHTML = `
+        <strong>${unit.name}</strong>
+        <div>${unit.count} remaining</div>
+      `;
+      
+      div.addEventListener('click', () => {
+        if (unit.count > 0) {
+          selectedUnit = unit;
+          document.querySelectorAll('.army-unit').forEach(u => u.classList.remove('selected'));
+          div.classList.add('selected');
+        }
+      });
+      
+      container.appendChild(div);
+    });
+  }
+  function placeUnit(e) {
+    if (!selectedUnit || selectedUnit.count <= 0) {
+      alert("Select a unit from your army first!");
+      return;
+    }
   
-  document.querySelector('.army-picker').style.display = 'none';
-  document.getElementById('game-grid').style.display = 'block';
-  initializeGame();
-}
+    const x = parseInt(e.target.dataset.x);
+    const y = parseInt(e.target.dataset.y);
+    
+    if (isValidPlacement(x, y)) {
+      socket.emit('place-unit', { 
+        x, 
+        y, 
+        unit: selectedUnit.name,
+        player: socket.id
+      });
+      
+      selectedUnit.count--;
+      renderArmyUnits();
+    }
+  }
+  function isValidPlacement(x, y) {
+    // Add deployment zone validation if needed
+    return true;
+  }
 
 // Game functions
-function placeUnit(e) {
-  if (!selectedUnits.length) return;
-  const x = parseInt(e.target.dataset.x);
-  const y = parseInt(e.target.dataset.y);
-  socket.emit('place-unit', x, y);
-}
 
 function rollD6() {
   socket.emit('roll-dice', '1d6');
@@ -159,13 +203,22 @@ socket.on('dice-result', (result) => {
 });
 
 function updateGrid(grid) {
-  document.querySelectorAll('.grid-cell').forEach(cell => {
-    const x = parseInt(cell.dataset.x);
-    const y = parseInt(cell.dataset.y);
-    cell.className = grid[y][x] === 'unit' ? 'grid-cell unit' : 'grid-cell';
-  });
-}
-
+    document.querySelectorAll('.grid-cell').forEach(cell => {
+      const x = parseInt(cell.dataset.x);
+      const y = parseInt(cell.dataset.y);
+      const unit = grid[y][x];
+      
+      cell.className = 'grid-cell';
+      cell.innerHTML = '';
+      
+      if (unit && unit.player === socket.id) {
+        cell.classList.add('player-unit');
+        cell.innerHTML = '⚔️';
+      } else if (unit) {
+        cell.classList.add('enemy-unit');
+      }
+    });
+  }
 // Initialize game (placeholder for future expansion)
 function initializeGame() {
   // Add any game initialization logic here

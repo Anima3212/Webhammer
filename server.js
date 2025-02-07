@@ -29,11 +29,21 @@ io.on('connection', (socket) => {
     io.emit('dice-result', { player: socket.id, result: roll });
   });
 
-  // Handle grid updates
-  socket.on('place-unit', (x, y) => {
-    gameState.grid[y][x] = 'unit';
-    io.emit('game-state', gameState);
+  // Handle grid updates (MOVED INSIDE CONNECTION HANDLER)
+  socket.on('place-unit', (data) => {
+    if (isValidPlacement(data)) {
+      gameState.grid[data.y][data.x] = {
+        unit: data.unit,
+        player: data.player
+      };
+      io.emit('game-state', gameState);
+    }
   });
+
+  // Validation function (INSIDE CONNECTION HANDLER)
+  function isValidPlacement(data) {
+    return gameState.grid[data.y][data.x] === 'empty';
+  }
 });
 
 server.listen(3000, () => {

@@ -15,7 +15,7 @@
           <select id="faction">
             <option value="">Choose Your Faction</option>
             <option value="space_marines">Space Marines</option>
-            <option value="orks">Orks</option>
+            <option value="orks">T'au</option>
           </select>
           <button onclick="confirmFaction()" class="confirm-button">Confirm Faction</button>
         </div>
@@ -30,15 +30,25 @@
             
             <!-- Selected Army -->
             <div class="army-status">
-                <h3>⛁ Your Army <span id="total-points">0</span>/<span id="max-points">2000</span> pts</h3>
+                <h3>⛁ Your Army <span id="total-points">0</span>/<span id="max-points">1000</span> pts</h3>
                 <div id="selected-units"></div>
                 <button onclick="startGame()" class="start-button">Deploy Forces</button>
               </div>
           </div>
         </div>
       </div>
-    <!-- Game Grid -->
-    <div class="game-grid" id="grid" style="display: none;"></div>
+    <!-- Add this after the army-picker -->
+<div class="game-container">
+    <div class="army-display" id="army-display">
+      <h3>Your Forces</h3>
+      <div id="army-units"></div>
+    </div>
+    
+    <div class="game-grid" id="game-grid" style="display: none;">
+      <h2>Battlefield</h2>
+      <div id="grid"></div>
+    </div>
+  </div>
 
     <!-- Dice Roller -->
     <div class="dice-roller">
