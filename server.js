@@ -10,7 +10,10 @@ const io = new Server(server);
 // Game state
 let gameState = {
   grid: Array(10).fill().map(() => Array(10).fill('empty')),
-  players: {}
+  players: {
+    1: { ready: false, units: [] },
+    2: { ready: false, units: [] }
+  }
 };
 
 // Serve static files
@@ -30,9 +33,17 @@ io.on('connection', (socket) => {
   });
 
   // Handle grid updates
-  socket.on('place-unit', (x, y) => {
-    gameState.grid[y][x] = 'unit';
+  socket.on('place-unit', (data) => {
+    const { player, x, y } = data;
+    gameState.grid[y][x] = `unit-player${player}`;
     io.emit('game-state', gameState);
+  });
+  
+  socket.on('deploy-army', (player) => {
+    gameState.players[player].ready = true;
+    if (gameState.players[1].ready && gameState.players[2].ready) {
+      io.emit('battle-start');
+    }
   });
 });
 
