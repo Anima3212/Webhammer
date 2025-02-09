@@ -20,6 +20,23 @@ const UNITS = {
     { name: "Battlewagon", points: 350 }
   ]
 };
+const players = {
+  1: {
+    faction: null,
+    units: [],
+    points: 0,
+    deployed: false,
+    color: '#cc0000'
+  },
+  2: {
+    faction: null,
+    units: [],
+    points: 0,
+    deployed: false,
+    color: '#4444ff'
+  }
+};
+
 
 // Initialize grid on page load
 createGrid();
@@ -40,74 +57,94 @@ function createGrid() {
 }
 
 // Army building functions
-function confirmFaction() {
-  const factionSelect = document.getElementById('faction');
-  selectedFaction = factionSelect.value;
-  
-  if (!selectedFaction) {
+function confirmFaction(player) {
+  const factionSelect = document.querySelector(`.faction[data-player="${player}"]`);
+  players[player].faction = factionSelect.value;
+
+  if (!players[player].faction) {
     alert("Please select a faction first!");
     return;
   }
 
-  document.getElementById('faction-selection').style.display = 'none';
-  document.getElementById('army-building').style.display = 'block';
-  populateUnitList();
+  document.getElementById(`player${player}-faction-selection`).style.display = 'none';
+  const armyBuilding = document.getElementById(`player${player}-army-building`);
+  armyBuilding.style.display = 'block';
+  populateUnitList(player);
 }
 
-function populateUnitList() {
-  const container = document.getElementById('available-units');
-  container.innerHTML = '';
-  
-  UNITS[selectedFaction].forEach(unit => {
+function populateUnitList(player) {
+  const container = document.getElementById(`player${player}-army-building`);
+  container.innerHTML = `
+    <div class="army-columns">
+      <div class="unit-list">
+        <h3>Available Units</h3>
+        <div id="player${player}-available-units"></div>
+      </div>
+      <div class="army-status">
+        <h3>⛁ Your Army <span id="player${player}-total-points">0</span>/2000 pts</h3>
+        <div id="player${player}-selected-units"></div>
+        <button onclick="deployArmy(${player})" class="start-button">Deploy Forces</button>
+      </div>
+    </div>
+  `;
+
+  const unitsContainer = document.getElementById(`player${player}-available-units`);
+  UNITS[players[player].faction].forEach(unit => {
     const div = document.createElement('div');
     div.className = 'unit-item';
     div.innerHTML = `
       <span>${unit.name}</span>
       <div class="unit-controls">
         <span>${unit.points} pts</span>
-        <button onclick="addUnit('${unit.name}', ${unit.points})">+</button>
+        <button onclick="addUnit(${player}, '${unit.name}', ${unit.points})">+</button>
       </div>
     `;
-    container.appendChild(div);
+    unitsContainer.appendChild(div);
   });
 }
 
-function addUnit(name, points) {
-  if (calculateTotalPoints() + points > MAX_POINTS) {
+function addUnit(player, name, points) {
+  const playerState = players[player];
+  if (playerState.points + points > MAX_POINTS) {
     alert("Maximum points exceeded!");
     return;
   }
 
-  const existingUnit = selectedUnits.find(u => u.name === name);
+  const existingUnit = playerState.units.find(u => u.name === name);
   if (existingUnit) {
     existingUnit.count++;
   } else {
-    selectedUnits.push({ name, points, count: 1 });
+    playerState.units.push({ name, points, count: 1 });
   }
-  updateSelectedArmy();
+  playerState.points += points;
+  updateSelectedArmy(player);
 }
-
-function removeUnit(name) {
-  const unitIndex = selectedUnits.findIndex(u => u.name === name);
+function removeUnit(player, name) {
+  const playerState = players[player];
+  const unitIndex = playerState.units.findIndex(u => u.name === name);
   if (unitIndex === -1) return;
 
-  selectedUnits[unitIndex].count--;
-  if (selectedUnits[unitIndex].count === 0) {
-    selectedUnits.splice(unitIndex, 1);
+  const unit = playerState.units[unitIndex];
+  playerState.points -= unit.points;
+  unit.count--;
+
+  if (unit.count === 0) {
+    playerState.units.splice(unitIndex, 1);
   }
-  updateSelectedArmy();
+  updateSelectedArmy(player);
 }
+
 
 function calculateTotalPoints() {
   return selectedUnits.reduce((total, unit) => total + (unit.points * unit.count), 0);
 }
 
-function updateSelectedArmy() {
-  const container = document.getElementById('selected-units');
-  const totalPoints = calculateTotalPoints();
+function updateSelectedArmy(player) {
+  const container = document.getElementById(`player${player}-selected-units`);
+  const pointsDisplay = document.getElementById(`player${player}-total-points`);
   
   container.innerHTML = '';
-  selectedUnits.forEach(unit => {
+  players[player].units.forEach(unit => {
     const div = document.createElement('div');
     div.className = 'selected-unit';
     div.innerHTML = `
@@ -116,16 +153,14 @@ function updateSelectedArmy() {
         <br>${unit.points} pts × ${unit.count}
       </div>
       <div>
-        <button onclick="removeUnit('${unit.name}')">−</button>
+        <button onclick="removeUnit(${player}, '${unit.name}')">−</button>
       </div>
     `;
     container.appendChild(div);
   });
 
-  document.getElementById('total-points').textContent = totalPoints;
-  document.getElementById('max-points').textContent = MAX_POINTS;
+  pointsDisplay.textContent = players[player].points;
 }
-
 function startGame() {
     if (calculateTotalPoints() === 0) {
       alert("Your army must contain at least one unit!");
@@ -203,6 +238,30 @@ socket.on('dice-result', (result) => {
 });
 
 function updateGrid(grid) {
+  document.querySelectorAll('.grid-cell').forEach(cell => {
+    const x = parseInt(cell.dataset.x);
+    const y = parseInt(cell.dataset.y);
+    cell.className = grid[y][x] === 'unit' ? 'grid-cell unit' : 'grid-cell';
+  });
+}
+function deployArmy(player) {
+  if (players[player].points === 0) {
+    alert("Your army must contain at least one unit!");
+    return;
+  }
+  
+  players[player].deployed = true;
+  document.querySelector(`.player${player} .start-button`).disabled = true;
+  checkDeployment();
+}
+
+function checkDeployment() {
+  if (players[1].deployed && players[2].deployed) {
+    document.getElementById('battlefield').style.display = 'block';
+    initializeGame();
+  }
+}
+
     document.querySelectorAll('.grid-cell').forEach(cell => {
       const x = parseInt(cell.dataset.x);
       const y = parseInt(cell.dataset.y);

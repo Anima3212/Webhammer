@@ -5,37 +5,38 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
+<!-- Update the body content -->
 <body>
   <div class="container">
-    <div class="army-picker">
-        <h2>⏳ Build Your Army</h2>
-        
-        <!-- Step 1: Faction Selection -->
-        <div id="faction-selection">
-          <select id="faction">
-            <option value="">Choose Your Faction</option>
-            <option value="space_marines">Space Marines</option>
-            <option value="orks">T'au</option>
-          </select>
-          <button onclick="confirmFaction()" class="confirm-button">Confirm Faction</button>
-        </div>
-      
-        <!-- Step 2: Army Building (hidden initially) -->
-        <div id="army-building" style="display: none;">
-            <div class="unit-list">
-              <h3>Available Units</h3>
-              <div id="available-units"></div>
-            </div>
-          </div>
-            
-            <!-- Selected Army -->
-            <div class="army-status">
-                <h3>⛁ Your Army <span id="total-points">0</span>/<span id="max-points">1000</span> pts</h3>
-                <div id="selected-units"></div>
-                <button onclick="startGame()" class="start-button">Deploy Forces</button>
-              </div>
-          </div>
-        </div>
+    <!-- Player 1 Section -->
+    <div class="army-picker player1">
+      <h2>Player 1 ⚔</h2>
+      <div id="player1-faction-selection" class="faction-selection">
+        <select class="faction" data-player="1">
+          <option value="">Choose Faction</option>
+          <option value="space_marines">Space Marines</option>
+          <option value="orks">Orks</option>
+        </select>
+        <button onclick="confirmFaction(1)" class="confirm-button">Confirm Faction</button>
+      </div>
+      <div id="player1-army-building" class="army-building" style="display: none;">
+        <!-- Player 1 Army Building Content -->
+      </div>
+    </div>
+
+    <!-- Player 2 Section -->
+    <div class="army-picker player2">
+      <h2>Player 2 ⚔</h2>
+      <div id="player2-faction-selection" class="faction-selection">
+        <select class="faction" data-player="2">
+          <option value="">Choose Faction</option>
+          <option value="space_marines">Space Marines</option>
+          <option value="orks">Orks</option>
+        </select>
+        <button onclick="confirmFaction(2)" class="confirm-button">Confirm Faction</button>
+      </div>
+      <div id="player2-army-building" class="army-building" style="display: none;">
+        <!-- Player 2 Army Building Content -->
       </div>
     <!-- Add this after the army-picker -->
 <div class="game-container">
@@ -50,14 +51,17 @@
     </div>
   </div>
 
-    <!-- Dice Roller -->
-    <div class="dice-roller">
+    <!-- Battlefield -->
+    <div id="battlefield" style="display: none;">
+      <div class="game-grid" id="grid"></div>
+      <div class="dice-roller">
         <button class="glow-button" onclick="rollD6()">ROLL D6</button>
-      <div id="dice-results"></div>
+        <div id="dice-results"></div>
+      </div>
     </div>
   </div>
-
   <script src="/socket.io/socket.io.js"></script>
   <script src="app.js"></script>
+  <!-- Rest of the HTML remains same -->
 </body>
 </html>

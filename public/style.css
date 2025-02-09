@@ -30,21 +30,43 @@
   }
   
   /* Army Picker Styles */
-  .army-picker {
-    background: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid var(--accent-red);
-    box-shadow: 0 0 15px rgba(204, 0, 0, 0.3);
-  }
-  
-  .army-picker h2 {
-    color: var(--accent-red);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
+  /* Add to style.css */
+.army-picker {
+  width: 45%;
+  margin: 10px;
+  transition: all 0.3s ease;
+}
+
+.player1 {
+  border-color: #cc0000;
+  box-shadow: 0 0 15px rgba(204, 0, 0, 0.3);
+}
+
+.player2 {
+  border-color: #4444ff;
+  box-shadow: 0 0 15px rgba(68, 68, 255, 0.3);
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#battlefield {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.grid-cell.unit.player1 {
+  background: #cc0000;
+  border-color: #ffd700;
+}
+
+.grid-cell.unit.player2 {
+  background: #4444ff;
+  border-color: #00ffff;
+}
   
   select {
     width: 100%;
